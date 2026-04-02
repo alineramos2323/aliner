@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="Protocolo RCP — Reconexão do Controle Pélvico. Método simples para recuperar o controle de escapes urinários em casa." />
+  <title>Protocolo RCP | Aline Rocha</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Lato:wght@400;500;700;900&display=swap" rel="stylesheet" />
+
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '4481369568775040');
+  fbq('track', 'PageView');
+  fbq('track', 'ViewContent');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=4481369568775040&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
+    :root {
+      --bg-main: #FCFAF8;
+      --bg-alt: #F7F3EE;
+      --text-primary: #2C3A47;
+      --text-light: #5B6B7A;
+      --text-muted: #95A5A6;
+      --accent: #1A9A9A;
+      --accent-dark: #127A7A;
+      --accent-light: #EBF7F7;
+      --warm: #EFE4D9;
+      --white: #FFFFFF;
+      --gold: #DDA77B;
+      --gold-dark: #C98E5F;
+      --green-success: #27AE60;
+      --red-alert: #E74C3C;
+
+      --shadow-md: 0 12px 32px rgba(44, 58, 71, 0.05);
+      --shadow-lg: 0 24px 64px rgba(44, 58, 71, 0.08);
+      
+      --radius-sm: 16px;
+      --radius-md: 24px;
+      --radius-lg: 32px;
+      --radius-xl: 999px;
+      --border: #EBE5DD;
+
+      --font-heading: 'Poppins', sans-serif;
+      --font-body: 'Lato', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: var(--font-body);
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+    h1, h2, h3, h4 { font-family: var(--font-heading); line-height: 1.1; color: var(--text-primary); letter-spacing: -0.02em; }
+    h1 { font-size: clamp(1.6rem, 4.5vw, 2.8rem); font-weight: 700; }
+    h2 { font-size: clamp(1.3rem, 4vw, 1.8rem); font-weight: 700; }
+    h3 { font-size: clamp(1.1rem, 3.5vw, 1.3rem); font-weight: 700; }
+    p { font-size: clamp(0.95rem, 2.3vw, 1.05rem); font-weight: 500; line-height: 1.4; }
+
+    .headline-highlight { display: inline; font-weight: 400; font-style: italic; color: var(--accent); }
+    
+    #app { 
+      position: relative; 
+      width: 100%; 
+      height: 100dvh;
+      height: 100vh;
+      display: flex; 
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .top-bar { 
+      background: rgba(252, 250, 248, 0.98); 
+      color: var(--text-primary); 
+      text-align: center; 
+      padding: 8px 16px; 
+      font-size: 0.7rem; 
+      font-weight: 700; 
+      letter-spacing: 0.05em; 
+      border-bottom: 1px solid var(--border); 
+      z-index: 1000; 
+      flex-shrink: 0;
+      line-height: 1.2;
+      overflow: hidden;
+    }
+
+    .screen-area { 
+      flex: 1; 
+      width: 100%; 
+      position: relative; 
+      overflow: hidden;
+    }
+    
+    .screen { 
+      position: absolute;
+      top: 0; 
+      left: 0; 
+      right: 0; 
+      bottom: 0; 
+      display: none; 
+      flex-direction: column; 
+      background: var(--bg-main); 
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    
+    .screen.active { 
+      display: flex; 
+      opacity: 1; 
+      animation: fadeIn 0.3s ease forwards; 
+    }
+
+    @keyframes fadeIn { 
+      from { opacity: 0; } 
+      to { opacity: 1; } 
+    }
+
+    .content-wrapper {
+      flex: 1;
+      display: flex; 
+      flex-direction: column; 
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 14px;
+      width: 100%; 
+      max-width: 540px; 
+      margin: 0 auto;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* HERO SPECIFIC */
+    .hero-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .hero-image-box { 
+      width: 100%; 
+      max-width: 140px; 
+      aspect-ratio: 3/4; 
+      border-radius: 80px 80px 12px 12px; 
+      overflow: hidden; 
+      border: 3px solid var(--white); 
+      box-shadow: var(--shadow-md); 
+      background: var(--warm); 
+      flex-shrink: 0;
+    }
+    
+    .hero-image-box img { 
+      width: 100%; 
+      height: 100%; 
+      object-fit: cover; 
+      object-position: center;
+    }
+
+    .hero-headline { 
+      text-align: center; 
+      margin: 6px 0;
+      overflow: hidden;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: var(--accent-light);
+      color: var(--accent-dark);
+      padding: 4px 12px;
+      border-radius: var(--radius-xl);
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .trust-section {
+      background: var(--accent-light);
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      margin: 8px 0 0 0;
+      text-align: center;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .trust-section p {
+      font-size: 0.85rem;
+      color: var(--accent-dark);
+      margin: 0;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    /* CTA */
+    .cta-wrap { 
+      width: 100%; 
+      margin-top: 12px; 
+      display: flex; 
+      justify-content: center; 
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    
+    .cta-button {
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      background: var(--accent); 
+      color: var(--white);
+      font-family: var(--font-heading); 
+      font-size: 0.95rem; 
+      font-weight: 600;
+      padding: 14px 20px; 
+      min-height: 48px;
+      border-radius: var(--radius-xl);
+      width: 100%; 
+      text-align: center; 
+      line-height: 1.2;
+      box-shadow: 0 8px 24px rgba(26, 154, 154, 0.3); 
+      transition: all 0.2s;
+      overflow: hidden;
+    }
+    
+    .cta-button:active { 
+      transform: scale(0.98); 
+      box-shadow: 0 4px 12px rgba(26, 154, 154, 0.2); 
+    }
+    
+    .cta-button-gold { 
+      background: var(--gold); 
+      color: var(--text-primary); 
+      font-weight: 800; 
+      box-shadow: 0 8px 24px rgba(221, 167, 123, 0.4); 
+    }
+
+    /* QUIZ */
+    .quiz-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .progress-bar { 
+      width: 100%; 
+      height: 4px; 
+      background: var(--border); 
+      border-radius: 40px; 
+      overflow: hidden; 
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
+    
+    .progress-fill { 
+      height: 100%; 
+      background: linear-gradient(90deg, var(--accent), var(--gold)); 
+      width: 14.28%; 
+      transition: width 0.4s ease; 
+    }
+    
+    .quiz-questions {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      gap: 8px;
+    }
+    
+    .quiz-question { 
+      display: none; 
+      width: 100%; 
+      overflow: hidden;
+    }
+    
+    .quiz-question.active { 
+      display: flex;
+      flex-direction: column;
+      animation: fadeIn 0.3s ease forwards;
+      overflow: hidden;
+    }
+    
+    .quiz-question h3 { 
+      font-size: 1rem;
+      margin-bottom: 12px; 
+      text-align: center;
+      overflow: hidden;
+    }
+    
+    .quiz-option {
+      display: flex; 
+      align-items: center; 
+      gap: 10px; 
+      background: var(--white); 
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm); 
+      padding: 12px; 
+      cursor: pointer;
+      font-size: 0.9rem; 
+      font-weight: 600; 
+      text-align: left; 
+      width: 100%; 
+      min-height: 50px;
+      box-shadow: var(--shadow-md); 
+      transition: all 0.2s;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    
+    .quiz-option:active { 
+      background: var(--accent-light); 
+      border-color: var(--accent); 
+      transform: scale(0.98); 
+    }
+
+    .quiz-validation {
+      display: none;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      padding: 6px;
+      background: #F0F8F8;
+      border-radius: var(--radius-sm);
+      animation: fadeIn 0.3s ease forwards;
+      overflow: hidden;
+    }
+    
+    .quiz-validation.show { 
+      display: block; 
+    }
+
+    #quiz-loading { 
+      display: none; 
+      text-align: center; 
+      width: 100%; 
+      overflow: hidden;
+    }
+    
+    #quiz-loading.active { 
+      display: block; 
+      animation: fadeIn 0.3s ease forwards; 
+    }
+    
+    .quiz-spinner { 
+      width: 40px; 
+      height: 40px; 
+      border: 3px solid var(--border); 
+      border-top-color: var(--accent); 
+      border-radius: 50%; 
+      animation: spin 0.8s linear infinite; 
+      margin: 0 auto 12px; 
+    }
+    
+    @keyframes spin { 
+      to { transform: rotate(360deg); } 
+    }
+
+    /* RESULTS */
+    .result-card { 
+      display: none; 
+      width: 100%; 
+      background: var(--white); 
+      border-radius: var(--radius-md); 
+      padding: 18px 16px; 
+      box-shadow: var(--shadow-lg); 
+      border-top: 4px solid var(--accent); 
+      text-align: center;
+      overflow: hidden;
+      height: 100%;
+    }
+    
+    .result-card.active { 
+      display: flex;
+      flex-direction: column;
+      animation: fadeIn 0.4s ease forwards; 
+    }
+    
+    .result-badge { 
+      display: inline-block; 
+      background: var(--accent-light); 
+      color: var(--accent-dark); 
+      font-family: var(--font-heading); 
+      font-size: 0.75rem; 
+      font-weight: 800; 
+      padding: 4px 12px; 
+      border-radius: var(--radius-xl); 
+      margin-bottom: 8px; 
+      text-transform: uppercase;
+      overflow: hidden;
+    }
+
+    .result-card h2 {
+      margin-bottom: 6px;
+      overflow: hidden;
+    }
+
+    .result-card > p:first-of-type {
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .result-metric {
+      background: var(--bg-alt);
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      margin: 10px 0;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--accent-dark);
+      overflow: hidden;
+    }
+
+    .result-card .trust-section {
+      margin: 10px 0;
+      padding: 10px 12px;
+      overflow: hidden;
+    }
+
+    /* SALES FLOW */
+    .sales-step {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: none;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .sales-step.active {
+      display: flex;
+    }
+
+    .step-card { 
+      width: 100%; 
+      background: var(--white); 
+      border-radius: var(--radius-lg); 
+      padding: 18px 16px; 
+      box-shadow: var(--shadow-lg); 
+      text-align: center; 
+      border: 1px solid rgba(0,0,0,0.03);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .step-card > div:first-child {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .step-card h2 {
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+
+    .step-card p {
+      overflow: hidden;
+    }
+
+    .step-eyebrow { 
+      font-family: var(--font-heading); 
+      font-size: 0.7rem; 
+      font-weight: 800; 
+      text-transform: uppercase; 
+      letter-spacing: 0.1em; 
+      color: var(--gold-dark); 
+      display: block; 
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+    
+    .punch-box { 
+      background: #FFF9F9; 
+      border-left: 4px solid #E74C3C; 
+      padding: 12px; 
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0; 
+      margin: 12px 0; 
+      text-align: left;
+      overflow: hidden;
+    }
+    
+    .punch-box p { 
+      font-size: 0.9rem; 
+      margin-bottom: 0; 
+      color: var(--text-primary);
+      overflow: hidden;
+    }
+
+    .epiphany-highlight { 
+      background: var(--text-primary); 
+      color: var(--white); 
+      padding: 14px; 
+      border-radius: var(--radius-md); 
+      margin: 12px 0; 
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+    
+    .epiphany-highlight p { 
+      color: var(--white); 
+      margin: 0; 
+      font-size: 0.95rem;
+      line-height: 1.3;
+      overflow: hidden;
+    }
+
+    .price-box {
+      background: var(--bg-alt);
+      padding: 16px;
+      border-radius: var(--radius-md);
+      margin: 12px 0;
+      border: 2px solid var(--border);
+      overflow: hidden;
+    }
+
+    .price-box p:first-child {
+      text-decoration: line-through;
+      color: var(--text-muted);
+      margin: 0;
+      font-weight: 700;
+      font-size: 0.85rem;
+      overflow: hidden;
+    }
+
+    .price-main {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--accent);
+      font-family: var(--font-heading);
+      margin: 4px 0 0 0;
+      overflow: hidden;
+    }
+
+    .urgency-alert {
+      background: #FFEFEF;
+      border: 2px solid #E74C3C;
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin: 10px 0;
+      line-height: 1.3;
+      overflow: hidden;
+    }
+
+    .guarantee-badge {
+      display: inline-block;
+      background: var(--green-success);
+      color: var(--white);
+      padding: 8px 14px;
+      border-radius: var(--radius-md);
+      font-weight: 800;
+      font-size: 0.8rem;
+      margin: 8px 0;
+      text-transform: uppercase;
+      overflow: hidden;
+    }
+
+    .what-you-get {
+      background: var(--white);
+      border: 2px solid var(--border);
+      padding: 12px;
+      border-radius: var(--radius-md);
+      margin: 10px 0;
+      text-align: left;
+      overflow: hidden;
+    }
+
+    .what-you-get p {
+      font-size: 0.85rem;
+      margin: 6px 0;
+      font-weight: 600;
+      overflow: hidden;
+    }
+
+    .what-you-get p:first-child {
+      font-weight: 800;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+
+    /* MODAL */
+    #modal-overlay { 
+      display: none; 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      right: 0; 
+      bottom: 0; 
+      background: rgba(0,0,0,0.6); 
+      z-index: 2000; 
+      justify-content: center; 
+      align-items: flex-end;
+      padding: 0;
+      overflow: hidden;
+    }
+    
+    #modal-overlay.active { 
+      display: flex; 
+    }
+    
+    .modal-card {
+      background: var(--white);
+      width: 100%;
+      max-width: 540px;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      padding: 20px 16px;
+      position: relative;
+      animation: slideUp 0.3s ease forwards;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    @keyframes slideUp { 
+      from { transform: translateY(100%); } 
+      to { transform: translateY(0); } 
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      font-size: 1.3rem;
+      color: var(--text-muted);
+      padding: 6px;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .modal-card h3 {
+      margin-bottom: 6px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .modal-card > p {
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+      text-align: center;
+      color: var(--text-muted);
+      overflow: hidden;
+    }
+
+    .modal-card .price-box {
+      margin: 12px 0;
+      overflow: hidden;
+    }
+
+    .modal-trust {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      align-items: center;
+      margin: 10px 0;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      overflow: hidden;
+    }
+
+    .modal-card .cta-button {
+      margin: 12px 0 8px 0;
+      overflow: hidden;
+    }
+
+    .modal-card > p:last-of-type {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 8px;
+      margin-bottom: 0;
+      overflow: hidden;
+    }
+
+    .modal-card > div:last-child {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      line-height: 1.3;
+      overflow: hidden;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 375px) {
+      .top-bar { padding: 6px 12px; font-size: 0.65rem; }
+      .content-wrapper { padding: 12px 12px; }
+      h1 { font-size: 1.4rem; }
+      h2 { font-size: 1.1rem; }
+      p { font-size: 0.9rem; }
+      .hero-image-box { max-width: 120px; }
+      .step-card { padding: 14px 12px; }
+      .modal-card { padding: 16px 12px; }
+      .cta-button { font-size: 0.9rem; min-height: 44px; padding: 12px 16px; }
+      .quiz-option { min-height: 46px; font-size: 0.85rem; }
+    }
+
+    @media (max-width: 320px) {
+      .top-bar { padding: 4px 10px; font-size: 0.6rem; }
+      .content-wrapper { padding: 10px 10px; }
+      h1 { font-size: 1.2rem; }
+      h2 { font-size: 1rem; }
+      p { font-size: 0.85rem; }
+      .hero-image-box { max-width: 100px; }
+      .hero-badge { padding: 3px 10px; font-size: 0.6rem; }
+      .step-card { padding: 12px 10px; }
+      .modal-card { padding: 14px 10px; }
+      .cta-button { font-size: 0.85rem; min-height: 40px; padding: 10px 14px; }
+      .quiz-option { min-height: 44px; font-size: 0.8rem; padding: 10px; }
+      .price-main { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="top-bar">
+      🔒 CONFIDENCIAL — Suas respostas nunca serão compartilhadas
+    </div>
+
+    <div class="screen-area">
+      
+      <!-- =============== HERO SCREEN =============== -->
+      <section class="screen active" id="screen-hero">
+        <div class="content-wrapper">
+          <div class="hero-content">
+            <div class="hero-image-box">
+              <img src="https://i.postimg.cc/mDCLd7Bf/Design-sem-nome(6).png" alt="Aline Rocha - Fisioterapeuta especialista em saúde pélvica" />
+            </div>
+
+            <div class="hero-headline">
+              <span class="hero-badge">MÉTODO COMPROVADO</span>
+              <h1>Se você escapa urina…<br><span class="headline-highlight">não é envelhecimento.</span></h1>
+            </div>
+
+            <p style="margin: 4px 0 0 0;">É algo que seu corpo <strong style="color: var(--accent);">pode aprender de novo.</strong></p>
+
+            <div class="trust-section">
+              <p>✓ Método baseado em pesquisa clínica<br>✓ Desenvolvido por fisioterapeuta<br>✓ 5 minutos por dia, deitada</p>
+            </div>
+          </div>
+
+          <div class="cta-wrap">
+            <button onclick="startQuiz()" class="cta-button">
+              Descobrir seu perfil
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============== QUIZ SCREEN =============== -->
+      <section class="screen" id="screen-quiz">
+        <div class="content-wrapper">
+          <div class="quiz-container">
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+
+            <div class="quiz-questions">
+              <div class="quiz-question active" data-question="1">
+                <h3>Com que frequência você escapa urina?</h3>
+                <button class="quiz-option" onclick="selectOption(1)" data-value="1">Raramente (1-2x por semana)</button>
+                <button class="quiz-option" onclick="selectOption(1)" data-value="2">Algumas vezes (3-5x por semana)</button>
+                <button class="quiz-option" onclick="selectOption(1)" data-value="3">Frequentemente (diariamente)</button>
+                <div class="quiz-validation show">✓ Esse padrão é mais comum que você pensa</div>
+              </div>
+
+              <div class="quiz-question" data-question="2">
+                <h3>Quando geralmente escapa?</h3>
+                <button class="quiz-option" onclick="selectOption(2)" data-value="1">Ao tossir ou espirrar</button>
+                <button class="quiz-option" onclick="selectOption(2)" data-value="2">Ao rir ou fazer esforço</button>
+                <button class="quiz-option" onclick="selectOption(2)" data-value="3">Sem avisar (até em repouso)</button>
+                <div class="quiz-validation show">✓ Seu corpo pode reaprender o comando certo</div>
+              </div>
+
+              <div class="quiz-question" data-question="3">
+                <h3>Como isso afeta sua vida?</h3>
+                <button class="quiz-option" onclick="selectOption(3)" data-value="1">Evito alguns exercícios</button>
+                <button class="quiz-option" onclick="selectOption(3)" data-value="2">Evito sair de casa às vezes</button>
+                <button class="quiz-option" onclick="selectOption(3)" data-value="3">Afeta muito minha qualidade de vida</button>
+                <div class="quiz-validation show">✓ Você não está sozinha. 1 em cada 3 mulheres vive isso</div>
+              </div>
+
+              <div class="quiz-question" data-question="4">
+                <h3>Você já tentou algo?</h3>
+                <button class="quiz-option" onclick="selectOption(4)" data-value="1">Não, é muito vago para começar</button>
+                <button class="quiz-option" onclick="selectOption(4)" data-value="2">Tentei exercícios, mas não funcionaram</button>
+                <button class="quiz-option" onclick="selectOption(4)" data-value="3">Nunca consegui consistência</button>
+                <div class="quiz-validation show">✓ A maioria das mulheres não sabe fazer do jeito certo</div>
+              </div>
+
+              <div class="quiz-question" data-question="5">
+                <h3>O maior desafio é:</h3>
+                <button class="quiz-option" onclick="selectOption(5)" data-value="1">Vergonha de falar sobre isso</button>
+                <button class="quiz-option" onclick="selectOption(5)" data-value="2">Não saber por onde começar</button>
+                <button class="quiz-option" onclick="selectOption(5)" data-value="3">Medo de que não funcione</button>
+                <div class="quiz-validation show">✓ Isso é normal. A gente resolve aqui</div>
+              </div>
+
+              <div class="quiz-question" data-question="6">
+                <h3>Saúde pélvica já foi tema com médico?</h3>
+                <button class="quiz-option" onclick="selectOption(6)" data-value="1">Nunca conversei sobre isso</button>
+                <button class="quiz-option" onclick="selectOption(6)" data-value="2">Ele disse "é normal da idade"</button>
+                <button class="quiz-option" onclick="selectOption(6)" data-value="3">Já investiguei, mas sem resultado</button>
+                <div class="quiz-validation show">✓ Você merecia ter respostas melhores</div>
+              </div>
+
+              <div class="quiz-question" data-question="7">
+                <h3>Você está pronta para mudar isso?</h3>
+                <button class="quiz-option" onclick="selectOption(7)" data-value="1">Sim, é agora ou nunca</button>
+                <button class="quiz-option" onclick="selectOption(7)" data-value="2">Quero tentar se for realmente simples</button>
+                <button class="quiz-option" onclick="selectOption(7)" data-value="3">Tenho dúvidas, mas vou conhecer</button>
+                <div class="quiz-validation show">✓ Sua resposta honesta nos ajuda a personalizar</div>
+              </div>
+
+              <div id="quiz-loading">
+                <div class="quiz-spinner"></div>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">Analisando seu perfil…</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="cta-wrap">
+            <button style="opacity: 0; pointer-events: none; height: 0; min-height: 0; padding: 0; margin: 0;">.</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============== RESULTS SCREEN =============== -->
+      <section class="screen" id="screen-result">
+        <div class="content-wrapper">
+
+          <div class="result-card" id="result-leve">
+            <span class="result-badge">Seu perfil</span>
+            <h2>Inicial</h2>
+            <p>Seus escapes ainda não dominam o dia. Seu corpo responde bem ao treinamento correto.</p>
+            
+            <div class="result-metric">Mulheres como você veem melhora em 2-3 semanas</div>
+
+            <div class="trust-section">
+              <p>Mais controle em 70-80% das situações em 8 semanas</p>
+            </div>
+          </div>
+
+          <div class="result-card" id="result-moderado">
+            <span class="result-badge">Seu perfil</span>
+            <h2>Moderado</h2>
+            <p>Os escapes já mexem com seus planos. Mas dá pra reverter.</p>
+            
+            <div class="result-metric">Mulheres como você recuperam controle em 4-6 semanas</div>
+
+            <div class="trust-section">
+              <p>Redução de 60-70% dos episódios</p>
+            </div>
+          </div>
+
+          <div class="result-card" id="result-avancado">
+            <span class="result-badge">Seu perfil</span>
+            <h2>Avançado</h2>
+            <p>Isso já afeta muito do que você quer fazer. Você merecia ter resolvido antes.</p>
+            
+            <div class="result-metric">Começa a funcionar desde a primeira semana</div>
+
+            <div class="trust-section">
+              <p>Redução de 50-60% dos escapes em 4 semanas</p>
+            </div>
+          </div>
+
+          <div class="cta-wrap">
+            <button onclick="startSalesFlow()" class="cta-button">Continuar</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============== SALES FLOW =============== -->
+      <section class="screen" id="screen-sales-flow">
+        <div class="content-wrapper">
+
+          <div class="sales-step active" id="ss-1">
+            <div class="step-card">
+              <div>
+                <span class="step-eyebrow">O problema real</span>
+                <h2>Seu corpo não ficou fraco.<br>Ficou desconectado do comando.</h2>
+                
+                <p style="margin-top: 10px;">Quando você tosse, ri ou se levanta, seus músculos pélvicos deveriam se contrair automaticamente.</p>
+                
+                <p>Eventualmente esse reflexo fica lento. Ou desaparece. Não porque enfraqueceu. Porque perdeu o timing.</p>
+
+                <div class="epiphany-highlight">
+                  <p>E a gente recupera isso em 8 semanas.</p>
+                </div>
+              </div>
+
+              <div class="cta-wrap">
+                <button onclick="nextSalesStep(2)" class="cta-button">Continuar</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="sales-step" id="ss-2">
+            <div class="step-card">
+              <div>
+                <span class="step-eyebrow">Verdade</span>
+                <h2>Não é força que você perdeu.</h2>
+                
+                <p style="margin-top: 10px;">Seu corpo ainda tem essa musculatura. Intacta. Só não está respondendo rápido quando precisa.</p>
+
+                <div class="punch-box">
+                  <p>A International Continence Society confirma: exercício correto reduz escapes em até 70%.</p>
+                </div>
+
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 10px;">
+                  O segredo não é forçar mais. É ativar no momento certo.
+                </p>
+              </div>
+
+              <div class="cta-wrap">
+                <button onclick="nextSalesStep(3)" class="cta-button">Entendi</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="sales-step" id="ss-3">
+            <div class="step-card">
+              <div>
+                <span class="step-eyebrow">O padrão</span>
+                <h2>Seu corpo aprendeu uma reação errada.</h2>
+                
+                <p style="margin-top: 10px;">Quando você tosse ou ri, seu corpo deixa "solto" quando deveria estar tenso.</p>
+                
+                <p>Simples assim.</p>
+
+                <div class="epiphany-highlight">
+                  <p>E um padrão que se aprendeu… se desaprende.</p>
+                </div>
+              </div>
+
+              <div class="cta-wrap">
+                <button onclick="nextSalesStep(4)" class="cta-button">Continuar</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="sales-step" id="ss-4">
+            <div class="step-card">
+              <div>
+                <span class="step-eyebrow">A solução</span>
+                <h2>O Protocolo RCP</h2>
+                
+                <p style="margin-top: 10px;">Método em 3 fases:</p>
+
+                <div style="text-align: left; margin: 10px 0; background: var(--bg-alt); padding: 10px; border-radius: var(--radius-sm); overflow: hidden;">
+                  <p style="margin-bottom: 8px; font-size: 0.9rem; overflow: hidden;"><strong>Semanas 1-2: Identificar</strong><br><span style="color: var(--text-muted); font-size: 0.8rem;">Você aprende a sentir o músculo certo</span></p>
+                  
+                  <p style="margin-bottom: 8px; font-size: 0.9rem; overflow: hidden;"><strong>Semanas 3-6: Fortalecer</strong><br><span style="color: var(--text-muted); font-size: 0.8rem;">Você melhora a resposta do corpo</span></p>
+                  
+                  <p style="font-size: 0.9rem; overflow: hidden;"><strong>Semana 7+: Integrar</strong><br><span style="color: var(--text-muted); font-size: 0.8rem;">Você ativa ANTES do esforço (o segredo)</span></p>
+                </div>
+
+                <p style="font-weight: 700; color: var(--accent-dark); font-size: 0.85rem; overflow: hidden;">Baseado em protocolos da International Continence Society</p>
+              </div>
+
+              <div class="cta-wrap">
+                <button onclick="nextSalesStep(5)" class="cta-button">Ver a prática</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="sales-step" id="ss-5">
+            <div class="step-card">
+              <div>
+                <span class="step-eyebrow">Como funciona</span>
+                <h2>Simples demais?</h2>
+                
+                <p style="margin-top: 10px;">Simples não significa fraco. Significa que funciona.</p>
+
+                <div class="epiphany-highlight">
+                  <p>Exercícios complicados ativam o músculo errado.<br><br>Exercícios simples, feitos certo, resolvem.</p>
+                </div>
+
+                <p style="margin-top: 10px; text-align: left; font-size: 0.9rem; overflow: hidden;"><strong>Um exemplo simples:</strong></p>
+
+                <div style="text-align: left; background: var(--bg-alt); padding: 10px; border-radius: var(--radius-sm); margin: 10px 0; overflow: hidden;">
+                  <p style="margin-bottom: 4px; font-size: 0.9rem; overflow: hidden;"><strong>Exercício 1</strong></p>
+                  <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0; overflow: hidden;">Deita. Contrai leve. Conta até 3. Relaxa. Repete 5 vezes.</p>
+                </div>
+
+                <p style="font-weight: 700; color: var(--text-primary); margin-top: 10px; font-size: 0.9rem; overflow: hidden;">5 minutos. Deitada na sua cama. Todo dia.</p>
+              </div>
+
+              <div class="cta-wrap">
+                <button onclick="nextSalesStep(6)" class="cta-button">Ver o preço</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="sales-step" id="ss-6">
+            <div class="step-card">
+              <div>
+                <h2>Protocolo RCP</h2>
+                
+                <div class="price-box">
+                  <p>De R$ 97</p>
+                  <div class="price-main">R$ 47</div>
+                </div>
+
+                <div class="what-you-get">
+                  <p>Você vai receber:</p>
+                  <p>✓ Protocolo RCP completo (guia estruturado)</p>
+                  <p>✓ Exercícios explicados passo a passo</p>
+                  <p>✓ Rotina pronta para 8 semanas</p>
+                  <p>✓ Checklist diário de acompanhamento</p>
+                  <p>✓ Acesso vitalício ao material</p>
+                </div>
+
+                <div class="guarantee-badge">
+                  ✓ 30 DIAS GARANTIDO
+                </div>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin: 6px 0; overflow: hidden;">Vê resultado ou devolvo 100% do seu dinheiro</p>
+
+                <div class="urgency-alert">
+                  ⏰ Oferta válida até DOMINGO (23h59)<br/>
+                  Depois volta ao preço de R$ 97
+                </div>
+
+                <p style="font-weight: 600; margin-top: 10px; color: var(--text-primary); font-size: 0.9rem; overflow: hidden;">Isso não vai resolver sozinho.</p>
+
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; overflow: hidden;">Quanto mais tempo passa, mais o corpo reforça o padrão.</p>
+              </div>
+
+              <div class="cta-wrap">
+                <button onclick="openModal()" class="cta-button cta-button-gold">
+                  Comprar agora
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- =============== MODAL =============== -->
+  <div id="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-close" onclick="closeModal()">×</div>
+      
+      <div style="font-size: 2rem; margin-bottom: 4px; text-align: center; overflow: hidden;">🔒</div>
+      <h3>Ambiente Confidencial</h3>
+      <p>Checkout seguro e criptografado. Seus dados estão protegidos.</p>
+      
+      <div class="price-box">
+        <p style="text-decoration: line-through; color: var(--text-muted); margin: 0; font-weight: 700; font-size: 0.8rem; overflow: hidden;">De R$ 97</p>
+        <p style="font-size: 1.8rem; font-weight: 800; color: var(--accent); margin: 2px 0 0 0; overflow: hidden;">R$ 47</p>
+        <p style="font-size: 0.75rem; margin-top: 4px; color: var(--text-muted); overflow: hidden;">✓ 30 dias garantido | ✓ Acesso vitalício</p>
+      </div>
+
+      <div class="modal-trust">
+        <span>🔐 Pagamento seguro com criptografia</span>
+      </div>
+      
+      <button onclick="confirmCheckout()" class="cta-button">Confirmar Pagamento</button>
+      
+      <p>Ninguém precisa saber. Só você.</p>
+
+      <div>
+        Formas de pagamento: Cartão de crédito • PIX • Boleto<br/>
+        Processamento imediato
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var quizScores = {};
+    var currentQ = 1;
+    var totalQ = 7; 
+    var checkoutUrl = '';
+
+    function buildUrl(){
+      var base='https://pay.cakto.com.br/3764ced_831014'; 
+      var p=new URLSearchParams(window.location.search), o=new URLSearchParams();
+      ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','src','sck'].forEach(function(k){
+        var v=p.get(k); if(v) o.set(k,v);
+      });
+      o.set('src','quiz_pelvico_aline');
+      var q=o.toString(); return q?base+'?'+q:base;
+    }
+
+    function switchScreen(hideId, showId) {
+      document.getElementById(hideId).classList.remove('active');
+      var showEl = document.getElementById(showId);
+      showEl.classList.add('active');
+    }
+
+    function startQuiz() {
+      switchScreen('screen-hero', 'screen-quiz');
+      try{ if(typeof fbq!=='undefined') fbq('track','AddToCart'); }catch(e){}
+      try{ if(typeof fbq!=='undefined') fbq('trackCustom','ev_q_start'); }catch(e){}
+    }
+
+    function selectOption(questionNum) {
+      var btn = event.currentTarget;
+      var options = btn.closest('.quiz-question').querySelectorAll('.quiz-option');
+      options.forEach(function(opt) { opt.style.borderColor = 'var(--border)'; opt.style.background = 'var(--white)'; });
+      btn.style.borderColor = 'var(--accent)'; btn.style.background = 'var(--accent-light)';
+      
+      quizScores[questionNum] = parseInt(btn.getAttribute('data-value'), 10);
+      setTimeout(function() { advanceQuiz(questionNum); }, 250);
+    }
+
+    function advanceQuiz(fromQ) {
+      var next = fromQ + 1;
+      if (next <= totalQ) {
+        document.querySelector('.quiz-question[data-question="' + fromQ + '"]').classList.remove('active');
+        document.querySelector('.quiz-question[data-question="' + next + '"]').classList.add('active');
+        document.getElementById('progress-fill').style.width = ((next / totalQ) * 100) + '%';
+      } else {
+        document.querySelector('.quiz-question[data-question="' + fromQ + '"]').classList.remove('active');
+        document.getElementById('progress-fill').style.width = '100%';
+        document.getElementById('quiz-loading').classList.add('active');
+        try{ if(typeof fbq!=='undefined') fbq('trackCustom','ev_q_done'); }catch(e){}
+        setTimeout(showResult, 1200);
+      }
+    }
+
+    function showResult() {
+      var total = 0; for (var key in quizScores) total += quizScores[key];
+      switchScreen('screen-quiz', 'screen-result');
+      try{ if(typeof fbq!=='undefined') fbq('track','Lead'); }catch(e){}
+      try{ if(typeof fbq!=='undefined') fbq('trackCustom','ev_q_done'); }catch(e){}
+      
+      var rId = total <= 14 ? 'result-leve' : (total <= 21 ? 'result-moderado' : 'result-avancado');
+      document.getElementById(rId).classList.add('active');
+    }
+
+    function startSalesFlow() {
+      switchScreen('screen-result', 'screen-sales-flow');
+      try{ if(typeof fbq!=='undefined') fbq('trackCustom','Lead'); }catch(e){}
+    }
+
+    function nextSalesStep(stepNum) {
+      var current = document.querySelector('.sales-step.active');
+      if (current) current.classList.remove('active');
+      var next = document.getElementById('ss-' + stepNum);
+      if (next) next.classList.add('active');
+    }
+
+    function openModal() {
+      checkoutUrl = buildUrl();
+      document.getElementById('modal-overlay').classList.add('active');
+      try{ if(typeof fbq!=='undefined') fbq('track','InitiateCheckout'); }catch(e){}
+    }
+
+    function closeModal() {
+      document.getElementById('modal-overlay').classList.remove('active');
+    }
+
+    function confirmCheckout() {
+      try{ if(typeof fbq!=='undefined') fbq('track','Purchase',{currency:'BRL',value:47}); }catch(e){}
+      window.location.href = checkoutUrl;
+    }
+  </script>
+</body>
+</html>
